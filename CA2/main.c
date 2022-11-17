@@ -5,13 +5,20 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 #define BUFFER_SIZE 1024
 #define READ_END 0
 #define WRITE_END 1
+#define PERMISSION 0777
 
 #define MAP_PROCESS_NAME "map.c"
 #define REDUCE_PROCESS_NAME "reduce.c"
+
+#define GENRE_FILE_PATH_FORMAT "./library/genres.csv"
+#define FIFO_PATH_FORMAT "./fifo/%s_fifo"
+#define LIBRARY_PATH_FORMAT "./library/part%s.csv"
 
 int number_of_genres = 0;
 
@@ -56,8 +63,10 @@ int create_process(char* process_name, char* write_msg)
     return pid;
 }
 
-int create_process_map(char* write_msg)
+int create_process_map(int file_number)
 {
+    char* write_msg[BUFFER_SIZE];
+    sprintf(write_msg, "%d", file_number);
     return create_process(MAP_PROCESS_NAME, write_msg);
 }
 
@@ -66,25 +75,28 @@ int create_process_reduce(char* write_msg)
     return create_process(REDUCE_PROCESS_NAME, write_msg);
 }
 
+
+void create_fifo()
+{
+    //read GENRE_FILE_NAME and create fifo
+    //update number_of_genres too
+
+    char * myfifo = "/tmp/myfifo";
+    mkfifo(myfifo, PERMISSION);
+}
+
 int main()
 {
-    char x[BUFFER_SIZE] = "./child.out";
-    char y[BUFFER_SIZE] = "argument";
-    write(1,"hellooo\n", 9);
+    create_fifo();
 
-    create_process(x, y);
-    write(1,"hello", 6);
+    for (int i = 1; i < "ls -1 | wc -l"; i++) //make this better
+        create_process_map(i);
 
-    // for (size_t i = 0; i < 10000000000; i++)
-    // {cd
-    //     if (i % 1000000000 == 0)
-    //     {
-    //         printf(".");
-    //     }
-        
-    // }
-    sleep(5);
+    for (int i = 0; i < number_of_genres; i++)// ,,,
+        create_process_reduce();
+    
+    wait();
 
-    // exit(EXIT_SUCCESS);
+    // closefifo();
     return 0;
 }
