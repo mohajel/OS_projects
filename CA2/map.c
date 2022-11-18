@@ -61,10 +61,6 @@ int main(int argc, char const *argv[])
     char* file_path = strtok(read_msg, ",");
     get_genres();
 
-
-
-
-
     // FILE * fp;
     // char * line = NULL;
     // size_t len = 0;
