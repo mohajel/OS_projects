@@ -95,7 +95,7 @@ void create_fifo(const char* g)
         char fifo_name[BUFFER_SIZE];
         sprintf(fifo_name, FIFO_PATH_FORMAT, token);
         mkfifo(fifo_name, PERMISSION);
-        printf( " %s created\n", fifo_name ); //printing each token
+        // printf( " %s created\n", fifo_name ); //printing each token
         token = strtok(NULL, ",");
     }
 }
@@ -125,18 +125,23 @@ int main()
 
     while(wait(NULL) != -1);
 
+
     for (int i = 1; i <= MAP_SIZE; i++) //make this better
         create_process_map(i, g);
 
-    while(wait(NULL) != -1);//delete it
-
+    // while(wait(NULL) != -1)
+    // {
+    //     sleep(1);
+    //     printf(".\n");
+    // }
 
     create_reduce_processes(g);
 
     while(wait(NULL) != -1);
+    printf("all processes finished successfully2\n");
 
     unlink_fifo(g);
  
-    printf("all processes finished successfully\n");
+    printf("all processes finished successfully3\n");
     exit(EXIT_SUCCESS);
 }

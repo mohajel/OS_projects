@@ -34,12 +34,10 @@ void get_genres()
         strcpy(genres[i].name, genre_name);
         sprintf(genres[i].fifo_name, FIFO_PATH_FORMAT, genre_name);
          
-        printf("... ... genres[%d] = %s \n", i, genres[i].name);
         genre_name = strtok(NULL, ",");
         i ++;
     }
     genres_size = i;
-    printf(" ... ...genres_size: %d \n", genres_size);
 }
 
 int find(char* genre)
@@ -50,37 +48,82 @@ int find(char* genre)
         
     return NOT_FOUND;  
 }
+// fcntl(fd0_dup, F_SETFL, fcntl(fd0_dup, F_GETFL) | O_NONBLOCK);
+//HERE
+void send(char* fifo_name, int data, char* file_path)
+{
+    char msg[BUFFER_SIZE];
+    sprintf(msg, "%d from %s", data, file_path);
+
+    int fd = open(fifo_name, O_WRONLY);
+
+    while(fd == -1)
+    {
+        printf("MAP IT IS -1-->\n");
+
+        fd = open(fifo_name, O_WRONLY, 0666);  
+    }
+    // printf("<--map.c fd = %d-->\n", fd);
+
+    // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+    int x = write(fd, msg, strlen(msg) + 1);
+    if (x == -1)
+    {
+        printf("write failed");
+    }
+    close(fd);
+}
+
+void count_genres(char* file_path)
+{
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    fp = fopen(file_path, "r");
+    if (fp == NULL)
+        exit(EXIT_FAILURE);
+
+    while ((read = getline(&line, &len, fp)) != -1) 
+    {
+        char* token = strtok(line, ",");
+        while (token != NULL)
+        {
+            // printf("tokenis:%s\n", token);
+            int index = find(token);
+            if (index != NOT_FOUND)
+                genres[index].count ++;
+            token = strtok(NULL, ",");
+        }
+    }
+    fclose(fp);
+    if (line)
+        free(line);
+}
 
 int main(int argc, char const *argv[])
 {
-    printf("    ...inside map.c with argv[1] = %s\n", argv[1]);
     int fd = atoi(argv[1]);
     char read_msg[BUFFER_SIZE];
     read(fd, read_msg, BUFFER_SIZE);
     close(fd);
     char* file_path = strtok(read_msg, ",");
+
+    printf("    ...inside map.c : %s\n", file_path);
+
+
     get_genres();
 
-    // FILE * fp;
-    // char * line = NULL;
-    // size_t len = 0;
-    // ssize_t read;
+    count_genres(file_path);
 
-    // fp = fopen(argv[1], "r");
-    // if (fp == NULL)
-    //     exit(EXIT_FAILURE);
+    for (int i = 0; i < genres_size; i++)
+    {
+        send(genres[i].fifo_name, genres[i].count, file_path);
+        // sleep(1);
+        // printf("**********%s sending %d to %s \n",file_path, genres[i].count ,genres[i].fifo_name);
+    }
 
-    // while ((read = getline(&line, &len, fp)) != -1) 
-    // {
-    //     printf("Retrieved line of length %zu:\n", read);
-    //     char* token = strtok(line, ",");
-    //     token = 
-    // }
-
-    // fclose(fp);
-    // if (line)
-    //     free(line);
-    // exit(EXIT_SUCCESS);
-
-    return 0;
+    printf("    ...%s finished\n",file_path);
+    exit(EXIT_SUCCESS);
 }
