@@ -9,10 +9,3 @@
 #define FIFO_PATH_FORMAT "./fifo/%s_fifo"
 #define LIBRARY_PATH_FORMAT "./library/part%d.csv"
 
-void read_genres_file(char* g)
-{
-    int fd = open(GENRE_FILE_PATH_FORMAT, O_RDONLY);
-    int last_char = read(fd, g, BUFFER_SIZE);
-    g[last_char] = '\0';
-    close(fd);
-}
