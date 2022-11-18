@@ -129,14 +129,14 @@ int main()
         create_process_map(i, g);
 
     while(wait(NULL) != -1);//delete it
-    
+
 
     create_reduce_processes(g);
 
     while(wait(NULL) != -1);
 
     unlink_fifo(g);
-
+ 
     printf("all processes finished successfully\n");
     exit(EXIT_SUCCESS);
 }
