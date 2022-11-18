@@ -33,7 +33,7 @@ void get_genres()
     {  
         strcpy(genres[i].name, genre_name);
         sprintf(genres[i].fifo_name, FIFO_PATH_FORMAT, genre_name);
-
+         
         printf("... ... genres[%d] = %s \n", i, genres[i].name);
         genre_name = strtok(NULL, ",");
         i ++;
