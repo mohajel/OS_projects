@@ -129,6 +129,7 @@ int main()
         create_process_map(i, g);
 
     while(wait(NULL) != -1);//delete it
+    
 
     create_reduce_processes(g);
 
