@@ -126,6 +126,10 @@ int main()
     while(wait(NULL) != -1);
 
 
+    create_reduce_processes(g);
+
+    // sleep(3);
+
     for (int i = 1; i <= MAP_SIZE; i++) //make this better
         create_process_map(i, g);
 
@@ -135,7 +139,6 @@ int main()
     //     printf(".\n");
     // }
 
-    create_reduce_processes(g);
 
     while(wait(NULL) != -1);
     printf("all processes finished successfully2\n");

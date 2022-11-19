@@ -42,6 +42,12 @@ void get_genres()
 
 int find(char* genre)
 {
+    //BUG FIX:
+    //handling /n
+    int last = strlen(genre);
+    if (genre[last - 1] == '\n')
+        genre[last - 1] = '\0';
+
     for (int i = 0; i < genres_size; i++)
         if (strcmp(genre, genres[i].name) == EQUAL)
             return i;
@@ -52,24 +58,30 @@ int find(char* genre)
 //HERE
 void send(char* fifo_name, int data, char* file_path)
 {
-    char msg[BUFFER_SIZE];
-    sprintf(msg, "%d from %s", data, file_path);
+    // char msg[BUFFER_SIZE];
+    // sprintf(msg, "%d from %s", data, file_path);
 
     int fd = open(fifo_name, O_WRONLY);
 
-    while(fd == -1)
+    if (fd == -1)
     {
-        printf("MAP IT IS -1-->\n");
-
-        fd = open(fifo_name, O_WRONLY, 0666);  
+        printf("^^^^^^^^^^^^^fd is -1");
     }
+    
+
+    // while(fd == -1)
+    // {
+    //     printf("MAP IT IS -1-->\n");
+
+    //     fd = open(fifo_name, O_WRONLY, 0666);  
+    // }
     // printf("<--map.c fd = %d-->\n", fd);
 
-    // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
-    int x = write(fd, msg, strlen(msg) + 1);
+
+    int x = write(fd, &data, sizeof(int));
     if (x == -1)
     {
-        printf("write failed");
+        printf("^^^^^^^^^^^^^write failed");
     }
     close(fd);
 }
@@ -102,6 +114,16 @@ void count_genres(char* file_path)
         free(line);
 }
 
+void print_status(char* file_path)
+{
+    printf("*****************************************\n");
+    printf("%s status:\n", file_path);
+    for (int i = 0; i < genres_size; i++)
+    {
+        printf("%s :..%s count: %d\n",file_path ,genres[i].name, genres[i].count);
+    }
+    printf("*****************************************\n");
+}
 int main(int argc, char const *argv[])
 {
     int fd = atoi(argv[1]);
@@ -112,16 +134,17 @@ int main(int argc, char const *argv[])
 
     printf("    ...inside map.c : %s\n", file_path);
 
-
     get_genres();
 
     count_genres(file_path);
+
+    print_status(file_path);
 
     for (int i = 0; i < genres_size; i++)
     {
         send(genres[i].fifo_name, genres[i].count, file_path);
         // sleep(1);
-        // printf("**********%s sending %d to %s \n",file_path, genres[i].count ,genres[i].fifo_name);
+        printf("**********%s sending %d to %s \n",file_path, genres[i].count ,genres[i].fifo_name);
     }
 
     printf("    ...%s finished\n",file_path);

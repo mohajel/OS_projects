@@ -21,37 +21,71 @@ int main(int argc, char const *argv[])
     close(fd_unname_pipe);
     char* fifo_name = strtok(read_msg, ",");
     int map_size = atoi(strtok(NULL, ","));
-    // printf("        ---fifo_name:%s map_size:%d\n", fifo_name, map_size);
 
 
-    // sleep(2);
-    int fd = open(fifo_name, O_RDONLY, 0666);
 
-    while(fd == -1)
+    int fd = open(fifo_name, O_RDONLY);
+    
+    int x;
+    for (int i = 0; i < map_size; i++)
     {
-        printf("REDUCE IT IS -1-->\n");
+        int y;
 
-        fd = open(fifo_name, O_RDONLY);  
-    }
-
-    printf("reduce fd is : %d\n", fd);
-
-
-    while(result != map_size)
-    {
-        // sleep(1);
-        char input[BUFFER_SIZE];
-        int x = read(fd, input, 80);
-        if (x > 0)
+        while (1)
         {
-            printf("result[%d] --> %s\n",result, input);
-            result ++;
-        }  
-        // printf("%d", x);
-
-        // printf("result[%d] --> %s\n",result, input);
-        // result ++;
+            sleep(1);
+            int y = read(fd, &x, sizeof(int));
+            if (y == -1)
+            {
+                printf("OH NO!\n");
+                return 33;
+            }
+            if (y == 0)
+                printf("didnit get anythin!\n");
+            else
+            {
+                printf("-----GOT %d, return value = %d!\n", x, y);
+                break;
+            }     
+        }
+            
+        
+        // if (read(fd, &x, sizeof(int) == -1) )
+        // {
+        //     printf("^^^^^^^^Read failed");
+        //     return 5;
+        // }
+        // printf("GOT %d with read = %d \n\n", x, y);
+        sleep(1);
+        result += x;
     }
+    
+
+    // while(fd == -1)
+    // {
+    //     printf("REDUCE IT IS -1-->\n");
+
+    //     fd = open(fifo_name, O_RDONLY);  
+    // }
+
+    // printf("reduce fd is : %d\n", fd);
+
+
+    // while(result != map_size)
+    // {
+    //     // sleep(1);
+    //     char input[BUFFER_SIZE];
+    //     int x = read(fd, input, 80);
+    //     if (x > 0)
+    //     {
+    //         printf("result[%d] --> %s\n",result, input);
+    //         result ++;
+    //     }  
+    //     // printf("%d", x);
+
+    //     // printf("result[%d] --> %s\n",result, input);
+    //     // result ++;
+    // }
 
     // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
     // char input[BUFFER_SIZE];
