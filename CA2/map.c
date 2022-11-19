@@ -138,13 +138,12 @@ int main(int argc, char const *argv[])
 
     count_genres(file_path);
 
-    print_status(file_path);
+    // print_status(file_path);
 
     for (int i = 0; i < genres_size; i++)
     {
         send(genres[i].fifo_name, genres[i].count, file_path);
-        // sleep(1);
-        printf("**********%s sending %d to %s \n",file_path, genres[i].count ,genres[i].fifo_name);
+        // printf("**********%s sending %d to %s \n",file_path, genres[i].count ,genres[i].fifo_name);
     }
 
     printf("    ...%s finished\n",file_path);

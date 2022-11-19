@@ -23,14 +23,11 @@ int main(int argc, char const *argv[])
     int map_size = atoi(strtok(NULL, ","));
 
 
-
     int fd = open(fifo_name, O_RDONLY);
-    
     int x;
     for (int i = 0; i < map_size; i++)
     {
         int y;
-
         while (1)
         {
             sleep(1);
@@ -44,68 +41,13 @@ int main(int argc, char const *argv[])
                 printf("didnit get anythin!\n");
             else
             {
-                printf("-----GOT %d, return value = %d!\n", x, y);
+                // printf("-----GOT %d, return value = %d!\n", x, y);
                 break;
             }     
-        }
-            
-        
-        // if (read(fd, &x, sizeof(int) == -1) )
-        // {
-        //     printf("^^^^^^^^Read failed");
-        //     return 5;
-        // }
-        // printf("GOT %d with read = %d \n\n", x, y);
+        }  
         sleep(1);
         result += x;
     }
-    
-
-    // while(fd == -1)
-    // {
-    //     printf("REDUCE IT IS -1-->\n");
-
-    //     fd = open(fifo_name, O_RDONLY);  
-    // }
-
-    // printf("reduce fd is : %d\n", fd);
-
-
-    // while(result != map_size)
-    // {
-    //     // sleep(1);
-    //     char input[BUFFER_SIZE];
-    //     int x = read(fd, input, 80);
-    //     if (x > 0)
-    //     {
-    //         printf("result[%d] --> %s\n",result, input);
-    //         result ++;
-    //     }  
-    //     // printf("%d", x);
-
-    //     // printf("result[%d] --> %s\n",result, input);
-    //     // result ++;
-    // }
-
-    // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
-    // char input[BUFFER_SIZE];
-    // char s[40];
-    // char ss[40];
-
-    // read(fd, s, 30);
-    // read(fd, ss, 30);
-
-    // printf("%s1 --> %s\n",fifo_name, input);
-    // printf("%s2 --> %s\n",fifo_name, s);
-    // printf("%s3 --> %s\n",fifo_name, ss);
-
-
-    // // fd = open(fifo_name, O_RDONLY);
-    // read(fd, input, BUFFER_SIZE);
-    // printf("%s3 --> %s\n",fifo_name, input);
-    // close(fd);
-
-
     printf("\nGanre:%s Count: %d\n", fifo_name, result);
     close(fd);
     exit(EXIT_SUCCESS);
