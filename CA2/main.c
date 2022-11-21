@@ -16,7 +16,7 @@
 #define MAP_PROCESS_NAME "map"
 #define REDUCE_PROCESS_NAME "reduce"
 
-void read_genres_file(char* g)
+void read_genres_file(char *g)
 {
     int fd = open(GENRE_FILE_PATH_FORMAT, O_RDONLY);
     int last_char = read(fd, g, BUFFER_SIZE);
@@ -24,7 +24,7 @@ void read_genres_file(char* g)
     close(fd);
 }
 
-int create_process(char* process_name, char* write_msg)
+int create_process(char *process_name, char *write_msg)
 {
     int fd[2];
     pid_t pid;
@@ -39,13 +39,13 @@ int create_process(char* process_name, char* write_msg)
         fprintf(stderr, "fork failed");
         return -2;
     }
-    else if (pid > 0 ) //parent process
+    else if (pid > 0) // parent process
     {
         close(fd[READ_END]);
         write(fd[WRITE_END], write_msg, strlen(write_msg) + 1);
         close(fd[WRITE_END]);
     }
-    else if (pid == 0) //child process
+    else if (pid == 0) // child process
     {
         close(fd[WRITE_END]);
         char fd_read[BUFFER_SIZE];
@@ -58,7 +58,7 @@ int create_process(char* process_name, char* write_msg)
     return pid;
 }
 
-int create_process_map(int file_number, char* g)
+int create_process_map(int file_number, char *g)
 {
     char write_msg[BUFFER_SIZE];
     sprintf(write_msg, LIBRARY_PATH_FORMAT, file_number);
@@ -67,13 +67,13 @@ int create_process_map(int file_number, char* g)
     return create_process(MAP_PROCESS_NAME, write_msg);
 }
 
-void create_reduce_processes(char* g)
+void create_reduce_processes(char *g)
 {
     char temp[BUFFER_SIZE];
     strcpy(temp, g);
-    char* token = strtok(temp, ",");
+    char *token = strtok(temp, ",");
 
-    while(token != NULL ) 
+    while (token != NULL)
     {
         char fifo_name[BUFFER_SIZE];
         sprintf(fifo_name, "./fifo/%s_fifo,%d", token, MAP_SIZE);
@@ -82,35 +82,36 @@ void create_reduce_processes(char* g)
     }
 }
 
-void create_fifo(const char* g)
+void create_fifo(const char *g)
 {
     char temp[BUFFER_SIZE];
     strcpy(temp, g);
 
-    char* token = strtok(temp, ",");
+    char *token = strtok(temp, ",");
 
-    while( token != NULL ) 
+    while (token != NULL)
     {
         char fifo_name[BUFFER_SIZE];
         sprintf(fifo_name, FIFO_PATH_FORMAT, token);
         mkfifo(fifo_name, PERMISSION);
+        printf("%s created\n", fifo_name);
         token = strtok(NULL, ",");
     }
 }
 
-void unlink_fifo(const char* g)
+void unlink_fifo(const char *g)
 {
     char temp[BUFFER_SIZE];
     strcpy(temp, g);
 
-    char* token = strtok(temp, ",");
+    char *token = strtok(temp, ",");
 
-    while( token != NULL ) 
+    while (token != NULL)
     {
         char fifo_name[BUFFER_SIZE];
         sprintf(fifo_name, FIFO_PATH_FORMAT, token);
         unlink(fifo_name);
-        printf( " %s unlinked\n", fifo_name ); //printing each token
+        printf(" %s unlinked\n", fifo_name); // printing each token
         token = strtok(NULL, ",");
     }
 }
@@ -120,15 +121,13 @@ int main()
     char g[BUFFER_SIZE];
     read_genres_file(g);
     create_fifo(g);
-
-    while(wait(NULL) != -1);
-
     create_reduce_processes(g);
 
-    for (int i = 1; i <= MAP_SIZE; i++) //make this better
+    for (int i = 1; i <= MAP_SIZE; i++) // make this better
         create_process_map(i, g);
 
-    while(wait(NULL) != -1);
+    while (wait(NULL) != -1)
+        ;
     printf("\nall processes finished successfully\n");
     unlink_fifo(g);
     exit(EXIT_SUCCESS);

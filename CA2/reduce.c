@@ -19,9 +19,8 @@ int main(int argc, char const *argv[])
     char read_msg[BUFFER_SIZE];
     read(fd_unname_pipe, read_msg, BUFFER_SIZE);
     close(fd_unname_pipe);
-    char* fifo_name = strtok(read_msg, ",");
+    char *fifo_name = strtok(read_msg, ",");
     int map_size = atoi(strtok(NULL, ","));
-
 
     int fd = open(fifo_name, O_RDONLY);
     int x;
@@ -43,12 +42,12 @@ int main(int argc, char const *argv[])
             {
                 // printf("-----GOT %d, return value = %d!\n", x, y);
                 break;
-            }     
-        }  
-        sleep(1);
+            }
+        }
+        // sleep(1);
         result += x;
     }
-    printf("\nGanre:%s Count: %d\n", fifo_name, result);
+    printf("Ganre:%s Count: %d\n", fifo_name, result);
     close(fd);
     exit(EXIT_SUCCESS);
 }
