@@ -16,9 +16,10 @@ int main(int argc, char *argv[])
   char *fileBuffer;
   int bufferSize;
   char fileName[30] = "input.bmp";
-  fillAndAllocate(initial_img.fileBuffer, fileName, initial_img.rows, initial_img.cols, initial_img.bufferSize);
 
-  getPixlesFromBMP24(initial_img.bufferSize, initial_img.rows, initial_img.cols, initial_img.fileBuffer,  initial_img.data);
+  fillAndAllocate(fileName, initial_img);
+  read_img(initial_img);
+
   // apply_smoothing_filter(picture_input);
   // apply_sepia_filter(picture_input);
   // apply_washed_out_filter(picture_input);

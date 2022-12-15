@@ -61,9 +61,16 @@ typedef struct tagBITMAPINFOHEADER
 } BITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
 
-
-bool fillAndAllocate(char *&buffer, const char *fileName, int &rows, int &cols, int &bufferSize)
+//   fillAndAllocate(initial_img.fileBuffer, fileName, initial_img.rows, initial_img.cols, initial_img.bufferSize);
+// 
+// bool fillAndAllocate(char *&buffer, const char *fileName, int &rows, int &cols, int &bufferSize)
+bool fillAndAllocate(const char *fileName, Img & img)
 {
+    char* &buffer = img.fileBuffer;
+    int& rows = img.rows;
+    int& cols = img.cols;
+    int& bufferSize = img.bufferSize;
+
     std::ifstream file(fileName);
 
     if (file)
@@ -99,15 +106,24 @@ void allocate_memory(int cols, int rows, Pixel **& pic)
         pic[i] = new Pixel[rows];
 }
 
-// void getPixlesFromBMP24(int end, int start_rows, int end_rows, int cols, char *fileReadBuffer, Pixel **&pic)
-void getPixlesFromBMP24(int end, int rows, int cols, char *fileReadBuffer, Pixel **&pic)
-{
-    int count = 1;
-    int padding = cols % 4;
 
-    allocate_memory(cols, rows, pic);
+
+// void getPixlesFromBMP24(int end, int start_rows, int end_rows, int cols, char *fileReadBuffer, Pixel **&pic)
+
+//   getPixlesFromBMP24(initial_img.bufferSize, initial_img.rows, initial_img.cols, initial_img.fileBuffer,  initial_img.data);
+
+// void getPixlesFromBMP24(int end, int rows, int cols, char *fileReadBuffer, Pixel **&pic)
+void getPixlesFromBMP24(Img& img, int start_row, int end_row)
+{
+    int end = img.bufferSize;
+    int rows = img.rows;
+    int cols = img.cols;
+    char* fileReadBuffer =img.fileBuffer;
+    Pixel**& pic = img.data;
+    int padding = cols % 4;
+    int count = start_row * 3 * cols + padding * start_row + 1;
     
-    for (int i = 0; i < rows; i++)
+    for (int i = start_row; i < end_row; i++)
     {
         count += padding;
         for (int j = cols - 1; j >= 0; j--)
@@ -128,6 +144,15 @@ void getPixlesFromBMP24(int end, int rows, int cols, char *fileReadBuffer, Pixel
                 count++;
             }
     }
+}
+
+void read_img(Img& img)
+{
+    Pixel**& pic = img.data;
+    int rows = img.rows;
+    int cols = img.cols;
+    allocate_memory(cols, rows, pic);
+    getPixlesFromBMP24(img, rows/2, rows);
 }
 
 void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileToCreate, int bufferSize, Pixel **pic)
