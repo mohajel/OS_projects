@@ -17,7 +17,7 @@ typedef int LONG;
 typedef unsigned short WORD;
 typedef unsigned int DWORD;
 
-const bool EXEC_TYPE = PARALLEL;
+const bool EXEC_TYPE = SERIAL;
 
 int kernel[3][3] = {{-2, -1, 0},
                     {-1,  1, 1},
