@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
+#include "defs.h"
 #include "bmp24.h"
 
 using namespace std;

@@ -1,8 +1,10 @@
+// In the Name of God
+
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
+#include "defs.h"
 
-#define FILE_OUT_SERIAL "outputtt.bmp"
 
 using std::cout;
 using std::endl;
@@ -10,12 +12,6 @@ using std::ifstream;
 using std::ofstream;
 
 #pragma pack(1)
-
-
-
-typedef int LONG;
-typedef unsigned short WORD;
-typedef unsigned int DWORD;
 
 struct Pixel
 {
@@ -32,9 +28,6 @@ struct Img
     int bufferSize;
     Pixel **data;
 };
-
-// Img 
-
 
 typedef struct tagBITMAPFILEHEADER
 {
@@ -60,10 +53,6 @@ typedef struct tagBITMAPINFOHEADER
     DWORD biClrImportant;
 } BITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
-
-//   fillAndAllocate(initial_img.fileBuffer, fileName, initial_img.rows, initial_img.cols, initial_img.bufferSize);
-// 
-// bool fillAndAllocate(char *&buffer, const char *fileName, int &rows, int &cols, int &bufferSize)
 bool fillAndAllocate(const char *fileName, Img & img)
 {
     char* &buffer = img.fileBuffer;
@@ -106,13 +95,6 @@ void allocate_memory(int cols, int rows, Pixel **& pic)
         pic[i] = new Pixel[rows];
 }
 
-
-
-// void getPixlesFromBMP24(int end, int start_rows, int end_rows, int cols, char *fileReadBuffer, Pixel **&pic)
-
-//   getPixlesFromBMP24(initial_img.bufferSize, initial_img.rows, initial_img.cols, initial_img.fileBuffer,  initial_img.data);
-
-// void getPixlesFromBMP24(int end, int rows, int cols, char *fileReadBuffer, Pixel **&pic)
 void getPixlesFromBMP24(Img& img, int start_row, int end_row)
 {
     int end = img.bufferSize;
@@ -150,9 +132,16 @@ void read_img(Img& img)
 {
     Pixel**& pic = img.data;
     int rows = img.rows;
+#define FILE_OUT_SERIAL "outputtt.bmp"
     int cols = img.cols;
     allocate_memory(cols, rows, pic);
-    getPixlesFromBMP24(img, rows/2, rows);
+
+    if (EXEC_TYPE == SERIAL)
+        getPixlesFromBMP24(img, 0, rows);
+
+    else if (EXEC_TYPE == PARALLEL)
+        getPixlesFromBMP24(img, 0, rows/2);
+        getPixlesFromBMP24(img, rows/2, rows);
 }
 
 void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileToCreate, int bufferSize, Pixel **pic)
