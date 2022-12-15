@@ -6,8 +6,7 @@
 
 using namespace std;
 
-Img initial_img;
-Img converted_img;
+
 
 int main(int argc, char *argv[])
 {

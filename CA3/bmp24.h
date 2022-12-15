@@ -1,10 +1,15 @@
 // In the Name of God
 
+#if !defined(__BMP24__)
+#define __BMP24__
+
+
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
+#include <pthread.h>
 #include "defs.h"
-
+#include "thread.h"
 
 using std::cout;
 using std::endl;
@@ -28,6 +33,9 @@ struct Img
     int bufferSize;
     Pixel **data;
 };
+
+Img initial_img;
+Img converted_img;
 
 typedef struct tagBITMAPFILEHEADER
 {
@@ -95,8 +103,9 @@ void allocate_memory(int cols, int rows, Pixel **& pic)
         pic[i] = new Pixel[rows];
 }
 
-void getPixlesFromBMP24(Img& img, int start_row, int end_row)
+void getPixlesFromBMP24(int start_row, int end_row)
 {
+    Img& img = initial_img;
     int end = img.bufferSize;
     int rows = img.rows;
     int cols = img.cols;
@@ -132,16 +141,21 @@ void read_img(Img& img)
 {
     Pixel**& pic = img.data;
     int rows = img.rows;
-#define FILE_OUT_SERIAL "outputtt.bmp"
     int cols = img.cols;
     allocate_memory(cols, rows, pic);
 
     if (EXEC_TYPE == SERIAL)
-        getPixlesFromBMP24(img, 0, rows);
+        getPixlesFromBMP24(0, rows);
 
     else if (EXEC_TYPE == PARALLEL)
-        getPixlesFromBMP24(img, 0, rows/2);
-        getPixlesFromBMP24(img, rows/2, rows);
+    {
+        Thread t(2);
+        t.run(new Thread_msg{0, rows/2, getPixlesFromBMP24});
+        t.run(new Thread_msg{rows/2, rows, getPixlesFromBMP24});
+        t.wait();
+        cout << "waiting finished" << endl;
+    }
+
 }
 
 void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileToCreate, int bufferSize, Pixel **pic)
@@ -177,3 +191,6 @@ void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileT
     }
     write.write(fileBuffer, bufferSize);
 }
+
+
+#endif // __BMP24__

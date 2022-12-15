@@ -1,11 +1,13 @@
 // In the Name of God
 
-#if !defined(__DEFS_)
-#define __DEFS_
+#if !defined(__DEFS__)
+#define __DEFS__
+
 
 #define SERIAL 0
 #define PARALLEL 1
 #define FILE_OUT_SERIAL "outputtt.bmp"
+#define THREADS_NUM 3
 
 typedef int LONG;
 typedef unsigned short WORD;
@@ -15,6 +17,6 @@ const bool EXEC_TYPE = PARALLEL;
 
 
 
-#endif // __DEFS_
+#endif // __DEFS__
 
 
