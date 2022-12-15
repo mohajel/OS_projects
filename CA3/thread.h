@@ -24,7 +24,7 @@ void *runner (void * param)
 {
     Thread_msg *t = (Thread_msg *) param;
     t->func(t->start_row, t->end_row);
-    delete t;
+    // delete t;
     pthread_exit(0);
 }
 
@@ -65,10 +65,10 @@ public:
         return true;
     }
 
-    ~Thread() 
-    {
-        delete this->workers;
-    }
+    // ~Thread() 
+    // {
+    //     delete this->workers;
+    // }
 };
 
 #endif // __THREAD__

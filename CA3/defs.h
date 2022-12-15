@@ -7,7 +7,7 @@
 #define SERIAL 0
 #define PARALLEL 1
 #define FILE_OUT_SERIAL "outputtt.bmp"
-#define THREADS_NUM 3
+#define THREADS_NUM 6
 
 typedef int LONG;
 typedef unsigned short WORD;

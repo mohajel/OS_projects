@@ -137,6 +137,15 @@ void getPixlesFromBMP24(int start_row, int end_row)
     }
 }
 
+void copy_img()
+{
+    converted_img.rows = initial_img.rows;
+    converted_img.cols = initial_img.cols;
+    allocate_memory(converted_img.cols, converted_img.rows, converted_img.data);
+    converted_img.fileBuffer = initial_img.fileBuffer;
+    converted_img.bufferSize = initial_img.bufferSize;
+}
+
 void read_img(Img& img)
 {
     Pixel**& pic = img.data;
@@ -144,17 +153,21 @@ void read_img(Img& img)
     int cols = img.cols;
     allocate_memory(cols, rows, pic);
 
+
     if (EXEC_TYPE == SERIAL)
         getPixlesFromBMP24(0, rows);
 
     else if (EXEC_TYPE == PARALLEL)
     {
-        Thread t(2);
-        t.run(new Thread_msg{0, rows/2, getPixlesFromBMP24});
-        t.run(new Thread_msg{rows/2, rows, getPixlesFromBMP24});
+        Thread t(THREADS_NUM);
+        int step = rows/THREADS_NUM;
+
+        for (size_t i = 0; i < THREADS_NUM; i++)
+            t.run(new Thread_msg{(int)(step * i), (int)(step * (i + 1)), getPixlesFromBMP24});
+
         t.wait();
-        cout << "waiting finished" << endl;
-    }
+        cout << "get pic complete" << endl;
+    }; 
 
 }
 

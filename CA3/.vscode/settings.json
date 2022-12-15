@@ -7,6 +7,7 @@
         "fstream": "cpp",
         "istream": "cpp",
         "limits": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "new": "cpp"
     }
 }
