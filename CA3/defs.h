@@ -3,6 +3,10 @@
 #if !defined(__DEFS__)
 #define __DEFS__
 
+#define RED 0
+#define GREEN 0
+#define BLUE 0
+
 
 #define SERIAL 0
 #define PARALLEL 1
@@ -15,7 +19,13 @@ typedef unsigned int DWORD;
 
 const bool EXEC_TYPE = PARALLEL;
 
+int kernel[3][3] = {{-2, -1, 0},
+                    {-1,  1, 1},
+                    { 0,  1, 2}};
 
+// int kernel[3][3] = {{0, 0, 0},
+//                     {0,  1, 0},
+//                     { 0,  0, 0}};
 
 #endif // __DEFS__
 

@@ -34,9 +34,11 @@ int main(int argc, char const *argv[])
     A * p1 = new A(12);
     A * p2 = new A(*p1);
 
-
+int kernel[3][3] = {{-2, 1, 0},
+                    {-1, 1, 1},
+                    { 0, 1, 2}};
     p2->x = 14;
-    cout << p1->x << endl;
+    cout << kernel[0][0] << endl;
 
 
     // A a(12);
