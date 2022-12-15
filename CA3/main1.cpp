@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <fstream>
 
-#define FILE_OUT_SERIAL "output.bmp"
+#define FILE_OUT_SERIAL "fuck.bmp"
 
 using std::cout;
 using std::endl;
@@ -315,14 +315,14 @@ int main(int argc, char *argv[])
     return 1;
   }
   getPixlesFromBMP24(bufferSize, rows, cols, fileBuffer,  picture_input);
-  apply_smoothing_filter(picture_input);
-  apply_sepia_filter(picture_input);
-  apply_washed_out_filter(picture_input);
-  add_cross(picture_input);
+  // apply_smoothing_filter(picture_input);
+  // apply_sepia_filter(picture_input);
+  // apply_washed_out_filter(picture_input);
+  // add_cross(picture_input);
   writeOutBmp24(fileBuffer, FILE_OUT_SERIAL, bufferSize, picture_input);
-  end = clock();
-  double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-  int time_exec = (int)(time_taken * 1000);
-  cout << "Time taken by serial program is : " << time_exec << endl;
+  // end = clock();
+  // double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+  // int time_exec = (int)(time_taken * 1000);
+  // cout << "Time taken by serial program is : " << time_exec << endl;
   return 0;
 }

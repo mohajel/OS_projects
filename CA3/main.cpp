@@ -9,18 +9,36 @@
 
 using namespace std;
 
+// Picture* flip(Picture* pic)
+// {
+    
+// }
+
 int main(int argc, char const *argv[])
 {
-    string img_name = "input.bmp";
+    char img_name[100] = "input.bmp";
 
-    Picture input_picture(img_name, 14);
+    Picture pic(img_name);
 
-    Picture p2 = input_picture;
+    // pic->write("out.bmp");
 
-    *(p2.x) = 16;
+    // Picture *flip = flip(pic);
 
-    cout << *(input_picture.x) << endl;
-    cout << *(p2.x) << endl;
+
+
+
+
+
+    // pic->writeOutBmp24("outimg.bmp");
+
+    // Picture input_picture(img_name, 14);
+
+    // Picture p2 = input_picture;
+
+    // *(p2.x) = 16;
+
+    // cout << *(input_picture.x) << endl;
+    // cout << *(p2.x) << endl;
 
     return 0;
 }
