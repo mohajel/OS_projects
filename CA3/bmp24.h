@@ -25,6 +25,13 @@ struct Pixel
     unsigned char blue;
 };
 
+struct Bpixel
+{
+    int red;
+    int green;
+    int blue;
+};
+
 struct Img
 {
     int rows;
@@ -34,8 +41,17 @@ struct Img
     Pixel **data;
 };
 
+struct BImg
+{
+    int rows;
+    int cols;
+    char *fileBuffer;
+    int bufferSize;
+    Bpixel **data;
+};
+
 Img initial_img;
-Img converted_img;
+BImg converted_img;
 
 typedef struct tagBITMAPFILEHEADER
 {
@@ -141,7 +157,10 @@ void copy_img()
 {
     converted_img.rows = initial_img.rows;
     converted_img.cols = initial_img.cols;
-    allocate_memory(converted_img.cols, converted_img.rows, converted_img.data);
+
+    converted_img.data = new Bpixel *[converted_img.cols];
+    for (int i = 0; i < converted_img.cols; i++)
+        (converted_img.data)[i] = new Bpixel[converted_img.rows];
     converted_img.fileBuffer = initial_img.fileBuffer;
     converted_img.bufferSize = initial_img.bufferSize;
 }

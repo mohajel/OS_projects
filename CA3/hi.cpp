@@ -114,13 +114,13 @@ int get_green_conv(int row_index, int col_index)
     return green_pixel;
 }
 
-Pixel get_conv(int row_index, int col_index)
+Bpixel get_conv(int row_index, int col_index)
 {
-    Pixel p;
+    Bpixel p;
 
-    p.red = (unsigned char)(get_red_conv(row_index, col_index));
-    p.green = (unsigned char)(get_green_conv(row_index, col_index));
-    p.blue = (unsigned char)(get_blue_conv(row_index, col_index));
+    p.red = get_red_conv(row_index, col_index);
+    p.green = get_green_conv(row_index, col_index);
+    p.blue = get_blue_conv(row_index, col_index);
 
     return p;
 }
@@ -132,10 +132,83 @@ void apply_checkered_partly(int start_row, int end_row)
     for (size_t i = start_row; i < end_row; i++)
         for (size_t j = 0; j < cols; j++)
             converted_img.data[i][j] = get_conv(i, j);
+}
 
-    Pixel **temp = initial_img.data;
-    initial_img.data = converted_img.data;
-    converted_img.data = temp;
+Bpixel find_min_colours()
+{
+    Bpixel p = {1000, 1000, 1000};
+    
+    for (size_t i = 0; i < converted_img.rows; i++)
+        for (size_t j = 0; j < converted_img.cols; j++)
+        {
+            if (converted_img.data[i][j].red < p.red)
+                p.red = converted_img.data[i][j].red;
+            if (converted_img.data[i][j].green < p.green)
+                p.green = converted_img.data[i][j].green;
+            if (converted_img.data[i][j].blue < p.blue)
+                p.blue = converted_img.data[i][j].blue;
+        }
+    return p;
+}
+Bpixel find_maximum_colours()
+{
+    Bpixel p = {-1000, -1000, -1000};
+    for (size_t i = 0; i < converted_img.rows; i++)
+        for (size_t j = 0; j < converted_img.cols; j++)
+        {
+            if (converted_img.data[i][j].red > p.red)
+                p.red = converted_img.data[i][j].red;
+            if (converted_img.data[i][j].green > p.green)
+                p.green = converted_img.data[i][j].green;
+            if (converted_img.data[i][j].blue > p.blue)
+                p.blue = converted_img.data[i][j].blue;
+        }
+    return p;
+}
+
+void normalize_red(int min, int max)
+{
+    for (size_t i = 0; i < converted_img.rows; i++)
+        for (size_t j = 0; j < converted_img.cols; j++)
+            initial_img.data[i][j].red = (initial_img.data[i][j].red - min) * 255 / (max - min);
+}
+void normalize_green(int min, int max)
+{
+    for (size_t i = 0; i < converted_img.rows; i++)
+        for (size_t j = 0; j < converted_img.cols; j++)
+            initial_img.data[i][j].green = (initial_img.data[i][j].green - min) * 255 / (max - min);
+}
+void normalize_blue(int min, int max)
+{
+    for (size_t i = 0; i < converted_img.rows; i++)
+        for (size_t j = 0; j < converted_img.cols; j++)
+            initial_img.data[i][j].blue = (initial_img.data[i][j].blue - min) * 255 / (max - min);
+}
+
+void normalize()
+{
+    Bpixel min_pixel = find_min_colours();
+    Bpixel max_pixel = find_maximum_colours();
+    int new_min = 0;
+    int new_max = 255;
+
+    if (EXEC_TYPE == SERIAL)
+    {
+        normalize_red(min_pixel.red, max_pixel.red);
+        normalize_green(min_pixel.green, max_pixel.green);
+        normalize_blue(min_pixel.blue, max_pixel.blue);
+    }
+
+    else if (EXEC_TYPE == PARALLEL)
+    {
+        Thread t(3);
+        t.run(new Thread_msg{min_pixel.red, max_pixel.red, normalize_red});
+        t.run(new Thread_msg{min_pixel.green, max_pixel.green, normalize_green});
+        t.run(new Thread_msg{min_pixel.blue, max_pixel.blue, normalize_blue});
+
+        t.wait();
+        cout << "waiting finished for reverse" << endl;
+    };
 }
 
 void apply_checkered()
@@ -155,6 +228,8 @@ void apply_checkered()
         t.wait();
         cout << "waiting finished for reverse" << endl;
     };
+
+    // normalize ();
 }
 
 void apply_dimond_one_line(int i)
@@ -220,7 +295,7 @@ int main(int argc, char *argv[])
     copy_img();
 
     apply_reverse();
-    //   apply_checkered();
+      apply_checkered();
     apply_dimond();
 
     writeOutBmp24(initial_img.rows, initial_img.cols, initial_img.fileBuffer, FILE_OUT_SERIAL, initial_img.bufferSize, initial_img.data);
