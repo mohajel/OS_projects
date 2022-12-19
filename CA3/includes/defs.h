@@ -23,7 +23,7 @@ typedef unsigned int DWORD;
 
 const bool EXEC_TYPE = PARALLEL;
 
-int kernel[3][3] = {{-2, -1, 0},
+const int kernel[3][3] = {{-2, -1, 0},
                     {-1,  1, 1},
                     { 0,  1, 2}};
 

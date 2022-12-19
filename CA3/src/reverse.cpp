@@ -1,11 +1,8 @@
-// In the Name of God
-
-#if !defined(__REVERSE__)
-#define __REVERSE__
 
 #include "defs.h"
 #include "bmp24.h"
 #include "thread.h"
+#include "reverse.h"
 
 void rvereseArray(Pixel *arr, int end)
 {
@@ -45,5 +42,3 @@ void apply_reverse()
     cout << "reverseImg:" << TICK_UNICODE << endl;
 
 }
-
-#endif // __REVERSE__

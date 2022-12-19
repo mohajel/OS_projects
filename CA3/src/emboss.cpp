@@ -1,11 +1,8 @@
-// In the Name of God
-
-#if !defined(__EMBOSS__)
-#define __EMBOSS__
 
 #include "defs.h"
 #include "bmp24.h"
 #include "thread.h"
+#include "emboss.h"
 
 bool is_inside_img(int row_index, int col_index)
 {
@@ -102,8 +99,4 @@ void apply_checkered()
     converted_img.data = temp;
 
     cout << "embossImg:" << TICK_UNICODE << endl;
-
 }
-
-#endif // __EMBOSS__
-

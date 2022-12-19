@@ -1,11 +1,7 @@
-// In the Name of God
-
-#if !defined(__DIMOND)
-#define __DIMOND
-
 #include "defs.h"
 #include "bmp24.h"
 #include "thread.h"
+#include "dimond.h"
 
 void apply_dimond_one_line(int i)
 {
@@ -54,5 +50,3 @@ void apply_dimond()
     };
     cout << "drawDimond:" << TICK_UNICODE << endl;
 }
-
-#endif // __DIMOND
