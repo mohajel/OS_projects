@@ -13,7 +13,7 @@
 
 #define SERIAL 0
 #define PARALLEL 1
-#define FILE_OUT_SERIAL "outputtt.bmp"
+#define FILE_OUT_SERIAL "outputImg.bmp"
 #define THREADS_NUM 6
 
 typedef int LONG;
