@@ -3,7 +3,6 @@
 #if !defined(__BMP24__)
 #define __BMP24__
 
-
 #include <iostream>
 #include <unistd.h>
 #include <fstream>
@@ -59,12 +58,12 @@ typedef struct tagBITMAPINFOHEADER
     DWORD biClrImportant;
 } BITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
-bool fillAndAllocate(const char *fileName, Img & img)
+bool fillAndAllocate(const char *fileName, Img &img)
 {
-    char* &buffer = img.fileBuffer;
-    int& rows = img.rows;
-    int& cols = img.cols;
-    int& bufferSize = img.bufferSize;
+    char *&buffer = img.fileBuffer;
+    int &rows = img.rows;
+    int &cols = img.cols;
+    int &bufferSize = img.bufferSize;
 
     std::ifstream file(fileName);
 
@@ -94,7 +93,7 @@ bool fillAndAllocate(const char *fileName, Img & img)
     }
 }
 
-void allocate_memory(int cols, int rows, Pixel **& pic)
+void allocate_memory(int cols, int rows, Pixel **&pic)
 {
     pic = new Pixel *[cols];
     for (int i = 0; i < cols; i++)
@@ -103,15 +102,15 @@ void allocate_memory(int cols, int rows, Pixel **& pic)
 
 void getPixlesFromBMP24(int start_row, int end_row)
 {
-    Img& img = initial_img;
+    Img &img = initial_img;
     int end = img.bufferSize;
     int rows = img.rows;
     int cols = img.cols;
-    char* fileReadBuffer =img.fileBuffer;
-    Pixel**& pic = img.data;
+    char *fileReadBuffer = img.fileBuffer;
+    Pixel **&pic = img.data;
     int padding = cols % 4;
     int count = start_row * 3 * cols + padding * start_row + 1;
-    
+
     for (int i = start_row; i < end_row; i++)
     {
         count += padding;
@@ -144,13 +143,12 @@ void copy_img()
     converted_img.bufferSize = initial_img.bufferSize;
 }
 
-void read_img(Img& img)
+void read_img(Img &img)
 {
-    Pixel**& pic = img.data;
+    Pixel **&pic = img.data;
     int rows = img.rows;
     int cols = img.cols;
     allocate_memory(cols, rows, pic);
-
 
     if (EXEC_TYPE == SERIAL)
         getPixlesFromBMP24(0, rows);
@@ -158,23 +156,28 @@ void read_img(Img& img)
     else if (EXEC_TYPE == PARALLEL)
     {
         Thread t(THREADS_NUM);
-        int step = rows/THREADS_NUM;
+        int step = rows / THREADS_NUM;
 
         for (size_t i = 0; i < THREADS_NUM; i++)
             t.run(new Thread_msg{(int)(step * i), (int)(step * (i + 1)), getPixlesFromBMP24});
 
         t.wait();
         cout << "readImg:" << TICK_UNICODE << endl;
-    }; 
-
+    };
 }
 
-void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileToCreate, int bufferSize, Pixel **pic)
+void writeOutBmp24(Img &img, const char *output_file_name)
 {
-    std::ofstream write(nameOfFileToCreate);
+    int rows = img.rows;
+    int cols = img.cols;
+    Pixel **&pic = img.data;
+    char *fileBuffer = img.fileBuffer;
+    int bufferSize = img.bufferSize;
+
+    std::ofstream write(output_file_name);
     if (!write)
     {
-        cout << "Failed to write " << nameOfFileToCreate << endl;
+        cout << "Failed to write " << output_file_name << endl;
         return;
     }
     int count = 1;
@@ -202,8 +205,6 @@ void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileT
     }
     write.write(fileBuffer, bufferSize);
     cout << "writeImg:" << TICK_UNICODE << endl;
-
 }
-
 
 #endif // __BMP24__

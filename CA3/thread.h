@@ -16,7 +16,6 @@ struct Thread_msg
 {
     int start_row;
     int end_row;
-    // function<void(int, int)> func;
     void (*func)(int, int);
 };
 
@@ -24,13 +23,12 @@ void *runner (void * param)
 {
     Thread_msg *t = (Thread_msg *) param;
     t->func(t->start_row, t->end_row);
-    // delete t;
     pthread_exit(0);
 }
 
 class Thread
 {
-private:/* code */
+private:
     int threds_num;
     int used_threads;
     pthread_attr_t attr;
@@ -65,10 +63,10 @@ public:
         return true;
     }
 
-    // ~Thread() 
-    // {
-    //     delete this->workers;
-    // }
+    ~Thread()
+    {
+        delete this->workers;
+    }
 };
 
 #endif // __THREAD__

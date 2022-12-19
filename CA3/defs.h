@@ -10,6 +10,7 @@
 #define BLUE 0
 
 #define TICK_UNICODE "\xE2\x9C\x93"
+#define MAX_FILE_NAME_SIZE 1024
 
 #define SERIAL 0
 #define PARALLEL 1
