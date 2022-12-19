@@ -13,8 +13,8 @@ void apply_dimond_one_line(int i)
 
     if (i < n)
     {
-        j1 = m - m / n * i;
-        j2 = m + m / n * i;
+        j1 = m - m * i / n;
+        j2 = m + m * i / n;
     }
     else
     {

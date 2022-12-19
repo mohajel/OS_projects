@@ -24,8 +24,8 @@ typedef unsigned int DWORD;
 const bool EXEC_TYPE = PARALLEL;
 
 const int kernel[3][3] = {{-2, -1, 0},
-                    {-1,  1, 1},
-                    { 0,  1, 2}};
+                        {-1,  1, 1},
+                        { 0,  1, 2}};
 
 #endif // __DEFS__
 

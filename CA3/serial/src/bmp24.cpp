@@ -46,9 +46,9 @@ bool fillAndAllocate(const char *fileName, Img &img)
 
 void allocate_memory(int cols, int rows, Pixel **&pic)
 {
-    pic = new Pixel *[cols];
-    for (int i = 0; i < cols; i++)
-        pic[i] = new Pixel[rows];
+    pic = new Pixel *[rows];
+    for (int i = 0; i < rows; i++)
+        pic[i] = new Pixel[cols];
 }
 
 void getPixlesFromBMP24(int start_row, int end_row)
