@@ -45,4 +45,4 @@ $(BUILD_DIR)/thread.o: $(SRC_DIR)/thread.cpp $(INCLUDE_DIR)/thread.h
 
 .PHONY: clean all
 clean:
-	rm -rf $(BUILD_DIR) *.o *.out
+	rm -rf $(BUILD_DIR) *.o *.out outputImg.bmp
