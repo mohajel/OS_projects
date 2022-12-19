@@ -57,18 +57,14 @@ int get_red_conv(int row_index, int col_index)
 {
     int red_pixel = 0;
 
-    int ii = 0;
-    for (size_t i = row_index - 1; i <= row_index; i++)
-    {
-        int jj = 0;
-        for (size_t j = col_index - 1; j <= col_index; j++)
-        {
+    for (int i = row_index - 1; i <= row_index + 1; i++)
+        for (int j = col_index - 1; j <= col_index + 1; j++)
             if (is_inside_img(i, j))
-                red_pixel += (initial_img.data[i][j]).red * kernel[ii][jj];
-            jj++;
-        }
-        ii++;
-    }
+                red_pixel += (initial_img.data[i][j]).red * kernel[i - (row_index - 1)][j - (col_index - 1)];
+
+    if (red_pixel < 0) return 0;
+    if (red_pixel > 255) return 255;
+
     return red_pixel;
 }
 
@@ -76,22 +72,13 @@ int get_blue_conv(int row_index, int col_index)
 {
     int blue_pixel = 0;
 
-    int ii = 0;
-    for (size_t i = row_index - 1; i <= row_index; i++)
-    {
-        int jj = 0;
-        for (size_t j = col_index - 1; j <= col_index; j++)
-        {
+    for (int i = row_index - 1; i <= row_index + 1; i++)
+        for (int j = col_index - 1; j <= col_index + 1; j++)
             if (is_inside_img(i, j))
-                blue_pixel += (initial_img.data[i][j]).blue * kernel[ii][jj];
-            jj++;
-        }
-        ii++;
-    }
-    // if (blue_pixel > 255)
-    //     return 255;
-    // if (blue_pixel < 0)
-    //     return 0;
+                blue_pixel += (initial_img.data[i][j]).blue * kernel[i - (row_index - 1)][j - (col_index - 1)];
+
+    if (blue_pixel < 0) return 0;
+    if (blue_pixel > 255) return 255;
 
     return blue_pixel;
 }
@@ -99,18 +86,15 @@ int get_blue_conv(int row_index, int col_index)
 int get_green_conv(int row_index, int col_index)
 {
     int green_pixel = 0;
-    int ii = 0;
-    for (size_t i = row_index - 1; i <= row_index; i++)
-    {
-        int jj = 0;
-        for (size_t j = col_index - 1; j <= col_index; j++)
-        {
+
+    for (int i = row_index - 1; i <= row_index + 1; i++)
+        for (int j = col_index - 1; j <= col_index + 1; j++)
             if (is_inside_img(i, j))
-                green_pixel += (initial_img.data[i][j]).green * kernel[ii][jj];
-            jj++;
-        }
-        ii++;
-    }
+                green_pixel += (initial_img.data[i][j]).green * kernel[i - (row_index - 1)][j - (col_index - 1)];
+
+    if (green_pixel < 0) return 0;
+    if (green_pixel > 255) return 255;
+
     return green_pixel;
 }
 
@@ -130,7 +114,7 @@ void apply_checkered_partly(int start_row, int end_row)
     int cols = initial_img.cols;
 
     for (size_t i = start_row; i < end_row; i++)
-        for (size_t j = 0; j < cols; j++)
+        for (size_t j = 1; j < cols - 1; j++)
             converted_img.data[i][j] = get_conv(i, j);
 }
 
@@ -215,7 +199,7 @@ void apply_checkered()
 {
     int rows = initial_img.rows;
     if (EXEC_TYPE == SERIAL)
-        apply_checkered_partly(0, rows);
+        apply_checkered_partly(1, rows - 1);
 
     else if (EXEC_TYPE == PARALLEL)
     {
@@ -295,7 +279,7 @@ int main(int argc, char *argv[])
     copy_img();
 
     apply_reverse();
-      apply_checkered();
+    apply_checkered();
     apply_dimond();
 
     writeOutBmp24(initial_img.rows, initial_img.cols, initial_img.fileBuffer, FILE_OUT_SERIAL, initial_img.bufferSize, initial_img.data);
