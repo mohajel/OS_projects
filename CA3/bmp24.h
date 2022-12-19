@@ -16,8 +16,6 @@ using std::endl;
 using std::ifstream;
 using std::ofstream;
 
-#pragma pack(1)
-
 struct Pixel
 {
     unsigned char red;
@@ -91,8 +89,8 @@ bool fillAndAllocate(const char *fileName, Img & img)
     }
     else
     {
-        cout << "File" << fileName << " doesn't exist!" << endl;
-        return 0;
+        cout << "File " << fileName << " doesn't exist!" << endl;
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -166,7 +164,7 @@ void read_img(Img& img)
             t.run(new Thread_msg{(int)(step * i), (int)(step * (i + 1)), getPixlesFromBMP24});
 
         t.wait();
-        cout << "get pic complete" << endl;
+        cout << "readImg:" << TICK_UNICODE << endl;
     }; 
 
 }
@@ -203,6 +201,8 @@ void writeOutBmp24(int rows, int cols, char *fileBuffer, const char *nameOfFileT
             }
     }
     write.write(fileBuffer, bufferSize);
+    cout << "writeImg:" << TICK_UNICODE << endl;
+
 }
 
 

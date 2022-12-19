@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include <unistd.h>
 #include <fstream>
 #include "defs.h"
@@ -41,8 +42,9 @@ void apply_reverse()
             t.run(new Thread_msg{(int)(step * i), (int)(step * (i + 1)), apply_reverse_partly});
 
         t.wait();
-        cout << "waiting finished for reverse" << endl;
     };
+    cout << "reverseImg:" << TICK_UNICODE << endl;
+
 }
 
 bool is_inside_img(int row_index, int col_index)
@@ -116,17 +118,13 @@ void apply_checkered_partly(int start_row, int end_row)
     for (size_t i = start_row; i < end_row; i++)
         for (size_t j = 1; j < cols - 1; j++)
             converted_img.data[i][j] = get_conv(i, j);
-
-    Pixel **temp = initial_img.data;
-    initial_img.data = converted_img.data;
-    converted_img.data = temp;
 }
 
 void apply_checkered()
 {
     int rows = initial_img.rows;
     if (EXEC_TYPE == SERIAL)
-        apply_checkered_partly(1, rows - 1);
+        apply_checkered_partly(0, rows);
 
     else if (EXEC_TYPE == PARALLEL)
     {
@@ -137,8 +135,14 @@ void apply_checkered()
             t.run(new Thread_msg{(int)(step * i), (int)(step * (i + 1)), apply_checkered_partly});
 
         t.wait();
-        cout << "waiting finished for reverse" << endl;
     };
+
+    Pixel **temp = initial_img.data;
+    initial_img.data = converted_img.data;
+    converted_img.data = temp;
+
+    cout << "embossImg:" << TICK_UNICODE << endl;
+
 }
 
 void apply_dimond_one_line(int i)
@@ -185,8 +189,8 @@ void apply_dimond()
             t.run(new Thread_msg{(int)(step * i), (int)(step * (i + 1)), apply_dimond_partly});
 
         t.wait();
-        cout << "waiting finished for reverse" << endl;
     };
+    cout << "drawDimond:" << TICK_UNICODE << endl;
 
 }
 
@@ -197,7 +201,12 @@ int main(int argc, char *argv[])
     Pixel **picture_input;
     char *fileBuffer;
     int bufferSize;
-    char fileName[30] = "input.bmp";
+
+    char* fileName = new char[32];
+    if (argc == 2)
+        fileName = argv[1];
+    else
+        strcpy(fileName, "input.bmp");
 
     fillAndAllocate(fileName, initial_img);
     read_img(initial_img);
@@ -211,6 +220,6 @@ int main(int argc, char *argv[])
     end = clock();
     double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
     int time_exec = (int)(time_taken * 1000);
-    cout << "Time taken by " << EXEC_TYPE << " program is : " << time_exec << endl;
+    cout << "Execution Time:" << time_exec << endl;
     return 0;
 }
