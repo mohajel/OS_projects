@@ -1,8 +1,9 @@
-
 #include "defs.h"
 #include "bmp24.h"
 #include "thread.h"
 #include "emboss.h"
+
+using namespace std;
 
 bool is_inside_img(int row_index, int col_index)
 {
@@ -21,8 +22,10 @@ int get_red_conv(int row_index, int col_index)
             if (is_inside_img(i, j))
                 red_pixel += (initial_img.data[i][j]).red * kernel[i - (row_index - 1)][j - (col_index - 1)];
 
-    if (red_pixel < 0) return 0;
-    if (red_pixel > 255) return 255;
+    if (red_pixel < 0)
+        return 0;
+    if (red_pixel > 255)
+        return 255;
 
     return red_pixel;
 }
@@ -36,8 +39,10 @@ int get_blue_conv(int row_index, int col_index)
             if (is_inside_img(i, j))
                 blue_pixel += (initial_img.data[i][j]).blue * kernel[i - (row_index - 1)][j - (col_index - 1)];
 
-    if (blue_pixel < 0) return 0;
-    if (blue_pixel > 255) return 255;
+    if (blue_pixel < 0)
+        return 0;
+    if (blue_pixel > 255)
+        return 255;
 
     return blue_pixel;
 }
@@ -51,8 +56,10 @@ int get_green_conv(int row_index, int col_index)
             if (is_inside_img(i, j))
                 green_pixel += (initial_img.data[i][j]).green * kernel[i - (row_index - 1)][j - (col_index - 1)];
 
-    if (green_pixel < 0) return 0;
-    if (green_pixel > 255) return 255;
+    if (green_pixel < 0)
+        return 0;
+    if (green_pixel > 255)
+        return 255;
 
     return green_pixel;
 }

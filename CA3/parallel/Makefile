@@ -5,7 +5,7 @@ SRC_DIR = src
 INCLUDE_DIR = includes
 
 CC = g++ 
-CFLAGS = --std=c++11 -I$(INCLUDE_DIR) -pthread
+CFLAGS = --std=c++11 -I$(INCLUDE_DIR)
 
 EXECUTABLE_FILE = imageFilters.out
 

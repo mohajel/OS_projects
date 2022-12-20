@@ -9,9 +9,6 @@
 #include <unistd.h>
 #include <fstream>
 
-using namespace std;
-
-
 struct Thread_msg
 {
     int start_row;
@@ -19,7 +16,7 @@ struct Thread_msg
     void (*func)(int, int);
 };
 
-void *runner (void * param);
+void *runner(void *param);
 
 class Thread
 {
@@ -27,7 +24,7 @@ private:
     int threds_num;
     int used_threads;
     pthread_attr_t attr;
-    pthread_t* workers;
+    pthread_t *workers;
 
 public:
     Thread(int n);

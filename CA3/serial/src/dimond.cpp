@@ -3,6 +3,8 @@
 #include "thread.h"
 #include "dimond.h"
 
+using namespace std;
+
 void apply_dimond_one_line(int i)
 {
     Pixel white_pixel = {255, 255, 255};

@@ -9,7 +9,6 @@
 
 void rvereseArray(Pixel *arr, int end);
 void apply_reverse_partly(int start_row, int end_row);
-
 void apply_reverse();
 
 #endif // __REVERSE__

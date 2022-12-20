@@ -5,17 +5,17 @@
 #include <fstream>
 #include "thread.h"
 
-void *runner (void * param)
+using namespace std;
+
+void *runner(void *param)
 {
-    Thread_msg *t = (Thread_msg *) param;
+    Thread_msg *t = (Thread_msg *)param;
     t->func(t->start_row, t->end_row);
     pthread_exit(0);
 }
 
-
 Thread::Thread(int n)
-    :
-    threds_num(n)
+    : threds_num(n)
 {
     this->used_threads = 0;
     pthread_attr_init(&attr);
@@ -29,8 +29,8 @@ void Thread::run(Thread_msg *msg)
         cerr << "more threads than expected!" << endl;
         return;
     }
-    pthread_create(&workers[used_threads], &attr, runner, (void*) msg);
-    this->used_threads ++;
+    pthread_create(&workers[used_threads], &attr, runner, (void *)msg);
+    this->used_threads++;
 }
 
 bool Thread::wait()

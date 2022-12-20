@@ -3,7 +3,6 @@
 #if !defined(__DEFS__)
 #define __DEFS__
 
-
 #pragma pack(1)
 #define RED 0
 #define GREEN 0
@@ -15,7 +14,7 @@
 #define SERIAL 0
 #define PARALLEL 1
 #define FILE_OUT_SERIAL "outputImg.bmp"
-#define THREADS_NUM 6
+#define THREADS_NUM 4
 
 typedef int LONG;
 typedef unsigned short WORD;
@@ -26,7 +25,6 @@ const bool EXEC_TYPE = PARALLEL;
 const int kernel[3][3] = {{-2, -1, 0},
                         {-1,  1, 1},
                         { 0,  1, 2}};
-
 #endif // __DEFS__
 
 

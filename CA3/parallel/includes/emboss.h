@@ -9,15 +9,10 @@
 
 bool is_inside_img(int row_index, int col_index);
 int get_red_conv(int row_index, int col_index);
-
 int get_blue_conv(int row_index, int col_index);
-
 int get_green_conv(int row_index, int col_index);
-
 Pixel get_conv(int row_index, int col_index);
-
 void apply_checkered_partly(int start_row, int end_row);
-
 void apply_checkered();
 
 #endif // __EMBOSS__

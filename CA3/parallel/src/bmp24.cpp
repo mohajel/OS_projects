@@ -6,6 +6,8 @@
 #include "thread.h"
 #include "bmp24.h"
 
+using namespace std;
+
 Img initial_img;
 Img converted_img;
 

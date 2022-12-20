@@ -4,6 +4,8 @@
 #include "thread.h"
 #include "reverse.h"
 
+using namespace std;
+
 void rvereseArray(Pixel *arr, int end)
 {
     int start = 0;
@@ -40,5 +42,4 @@ void apply_reverse()
         t.wait();
     };
     cout << "reverseImg:" << TICK_UNICODE << endl;
-
 }
