@@ -11,7 +11,7 @@
 
 #include "manual.h"
 
-#define MAP_SIZE 3
+#define MAP_SIZE 5
 
 #define MAP_PROCESS_NAME "map"
 #define REDUCE_PROCESS_NAME "reduce"
@@ -123,7 +123,7 @@ int main()
     create_fifo(g);
     create_reduce_processes(g);
 
-    for (int i = 1; i <= MAP_SIZE; i++) // make this better
+    for (int i = 1; i <= MAP_SIZE; i++) 
         create_process_map(i, g);
 
     while (wait(NULL) != -1)

@@ -1,0 +1,3 @@
+here you can find list of all your sales:
+
+[31mSOLD:[37m s2 sold g6 to b4. price:400$
